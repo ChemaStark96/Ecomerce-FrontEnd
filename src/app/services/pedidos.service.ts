@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pedido } from '../models/Pedido.model';
-import { enviroment } from '../enviroments/enviroment';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ import { enviroment } from '../enviroments/enviroment';
 
 export class PedidosService {
 
-  private apiUrl: string = enviroment.apiUrl +'pedidos/';  
+  private apiUrl: string = environment.apiUrl +'pedidos/';  
 
   constructor(private http: HttpClient) { }
 
