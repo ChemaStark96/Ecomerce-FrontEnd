@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Producto } from '../../models/Producto.model';
+import { ProductosService } from '../../services/productos.service';
 
 @Component({
   selector: 'app-productos',
@@ -8,7 +9,7 @@ import { Producto } from '../../models/Producto.model';
   standalone: false,
   styleUrls: ['./productos.component.css']
 })
-export class ProductosComponent implements OnInit {
+export class ProductosComponent {
 
   productos: Producto[] = [];
   productoForm: FormGroup;
@@ -19,7 +20,7 @@ export class ProductosComponent implements OnInit {
   eliminandoId: number | null = null;
   guardando: boolean = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private productosService: ProductosService) {
     this.productoForm = this.fb.group({
       id: [null],
       nombre: ['', [Validators.required]],
@@ -34,7 +35,11 @@ export class ProductosComponent implements OnInit {
   }
 
   listarProductos(): void {
-    //  Aquí se consume this.productosService.getProductos()...
+    this.productosService.getProductos().subscribe({
+      next: (resp: Producto[]) => {
+        this.productos = resp;
+      }
+    })
   }
 
   toggleForm(): void {
@@ -52,15 +57,31 @@ export class ProductosComponent implements OnInit {
     const data = this.productoForm.value;
 
     if (this.isEditMode) {
-      //  Aquí se consume this.productosService.actualizarProducto(data)
-    } else {
-      // Aquí se consume this.productosService.crearProducto(data)
-    }
+      
+      this.productosService.postProductos(data).subscribe({
+        next: () => {
+          this.listarProductos();
+          this.guardando = false;
+          this.toggleForm(); 
+        },
+        error: () => {
 
-    // Luego de consumir:
-    // this.listarProductos();
-    // this.guardando = false;
-    // this.toggleForm();
+          this.guardando = false; 
+        }
+      });
+    } else {
+      this.productosService.putProductos(data).subscribe({
+        next: () => {
+          this.listarProductos(); // Se actualiza la lista de productos.
+          this.guardando = false; // Se desactiva el indicador de guardado.
+          this.toggleForm(); // Se cierra el formulario.
+        },
+        error: () => {
+          // Manejo de errores en caso de fallo.
+          this.guardando = false;
+        }
+      });
+    }
   }
 
   editProducto(producto: Producto): void {
@@ -73,8 +94,15 @@ export class ProductosComponent implements OnInit {
 
   eliminarProducto(producto: Producto): void {
     this.eliminandoId = producto.id;
-    //  Aquí va this.productosService.eliminarProducto(producto.id)
-    // this.listarProductos();
-    // this.eliminandoId = null;
+    if (producto.id !== null) {
+      this.productosService.deleteProductos(producto.id).subscribe({
+        next: () => this.listarProductos(),
+        error: () => {
+          // Manejo de errores en caso de fallo.
+          console.error('Error al eliminar el producto', producto.id);
+        }
+      });
+    }
+    this.eliminandoId = null;
   }
 }
