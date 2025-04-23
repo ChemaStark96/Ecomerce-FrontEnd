@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Cliente } from '../../models/Cliente.model';
+import { ClientesService } from '../../services/clientes.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-clientes',
@@ -19,14 +21,17 @@ export class ClientesComponent implements OnInit {
   eliminandoId: number | null = null;
   guardando: boolean = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private clientesService: ClientesService
+  ) {
     this.clienteForm = this.fb.group({
       id: [null],
       nombre: ['', [Validators.required]],
       apellido: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       telefono: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      direccion: ['', [Validators.maxLength(100)]],
+      direccion: ['']
     });
   }
 
@@ -35,33 +40,62 @@ export class ClientesComponent implements OnInit {
   }
 
   listarClientes(): void {
-    //Aqui recibe lo de back
+    this.clientesService.getClientes().subscribe({
+      next: (resp) => this.clientes = resp,
+      error: (err) => Swal.fire('Error', 'No se pudieron cargar los clientes', 'error')
+    });
   }
 
   toggleForm(): void {
-    this.showForm = !this.showForm;
-    this.textoModal = 'Registrar Cliente';
-    this.isEditMode = false;
-    this.selectedCliente = null;
-    this.clienteForm.reset();
-  }
+  this.showForm = true;
+  this.textoModal = 'Registrar Cliente';
+  this.isEditMode = false;
+  this.selectedCliente = null;
+  this.clienteForm.reset();
+}
+
 
   onSubmit(): void {
-    if (this.clienteForm.invalid) return;
-
-    this.guardando = true;
-
-    const data = this.clienteForm.value;
-
-    if (this.isEditMode && this.selectedCliente) {
-      // consumo de this.clientesService.actualizarCliente(data)
-    } else {
-      // consumo de this.clientesService.crearCliente(data)
+    console.log('🚀 onSubmit ejecutado');
+    console.log('📦 Valores del formulario:', this.clienteForm.value);
+  
+    if (this.clienteForm.invalid) {
+      console.warn('⚠️ Formulario inválido:', this.clienteForm);
+      return;
     }
-
-    this.guardando = false;
-    this.toggleForm();
+  
+    this.guardando = true;
+    const data = this.clienteForm.value;
+  
+    if (this.isEditMode && data.id) {
+      this.clientesService.putCliente(data).subscribe({
+        next: () => {
+          Swal.fire('Cliente actualizado', '', 'success');
+          this.listarClientes();
+          this.guardando = false;
+          this.toggleForm();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo actualizar el cliente', 'error');
+          this.guardando = false;
+        }
+      });
+    } else {
+      this.clientesService.postCliente(data).subscribe({
+        next: () => {
+          Swal.fire('Cliente creado', '', 'success');
+          this.listarClientes();
+          this.guardando = false;
+          this.toggleForm();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo registrar el cliente', 'error');
+          this.guardando = false;
+        }
+      });
+    }
   }
+  
 
   editCliente(cliente: Cliente): void {
     this.selectedCliente = cliente;
@@ -73,6 +107,29 @@ export class ClientesComponent implements OnInit {
 
   eliminarCliente(cliente: Cliente): void {
     this.eliminandoId = cliente.id;
-    //Aqui va el borrado
+    Swal.fire({
+      title: '¿Eliminar cliente?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.isConfirmed && cliente.id != null) {
+        this.clientesService.deleteCliente(cliente.id).subscribe({
+          next: () => {
+            Swal.fire('Cliente eliminado', '', 'success');
+            this.listarClientes();
+            this.eliminandoId = null;
+          },
+          error: () => {
+            Swal.fire('Error', 'No se pudo eliminar el cliente', 'error');
+            this.eliminandoId = null;
+          }
+        });
+      } else {
+        this.eliminandoId = null;
+      }
+    });
   }
 }
