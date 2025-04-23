@@ -5,6 +5,7 @@ import { Pedido } from '../../models/Pedido.model';
 @Component({
   selector: 'app-pedidos',
   templateUrl: './pedidos.component.html',
+  standalone: false,
   styleUrls: ['./pedidos.component.css']
 })
 export class PedidosComponent implements OnInit {
