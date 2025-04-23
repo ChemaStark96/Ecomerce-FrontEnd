@@ -5,6 +5,7 @@ import { Producto } from '../../models/Producto.model';
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.component.html',
+  standalone: false,
   styleUrls: ['./productos.component.css']
 })
 export class ProductosComponent implements OnInit {
