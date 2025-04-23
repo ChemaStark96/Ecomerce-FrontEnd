@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<nav>
+  <div>
+    <a href="#"><img src="https://www.iconpacks.net/icons/2/free-store-icon-2017-thumb.png" alt="logo" ></a>
+    
+    <button (click)="toggleMenu()" type="button">
+      <img src="https://cdn-icons-png.flaticon.com/512/10312/10312917.png" alt="Menu" />
+    </button>
+    
+    
+    <div [ngClass]="{ 'show': isMenuOpen }">
+      <ul>
+        <li class="nav-item"><a class="nav-link" routerLink="/">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/clientes">Clientes</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/productos">Productos</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/pedidos">Pedidos</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+  <!-- routerLink="/clientes" id="navbarAeropuertos"  routerLinkActive="active"-->

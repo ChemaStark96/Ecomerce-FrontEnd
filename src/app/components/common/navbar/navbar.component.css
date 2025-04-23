@@ -1,0 +1,95 @@
+/* Estilos para navbar chingón */
+nav {
+  background: #1e1e2f;
+  padding: 0.75rem 2rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+nav div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: auto;
+}
+
+nav a img {
+  width: 40px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+nav a img:hover {
+  transform: rotate(-10deg) scale(1.1);
+}
+
+nav button {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+nav button img {
+  width: 28px; 
+  height: auto;
+  filter: brightness(0) invert(1); 
+  transition: transform 0.3s ease;
+}
+
+nav button img:hover {
+  transform: scale(1.1);
+}
+
+nav ul {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: background 0.3s ease, transform 0.2s;
+}
+
+.nav-link:hover {
+  background-color: #3a3a5c;
+  transform: scale(1.05);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  nav button {
+    display: flex;
+  }
+
+  nav div > div {
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    margin-top: 1rem;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  nav div.show {
+    display: flex !important;
+  }
+}
