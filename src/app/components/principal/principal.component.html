@@ -1,63 +1,43 @@
-<!DOCTYPE html>
-
-  <!-- Seleccion de cliente y muestra de sus datos -->
-  <form [formGroup]="form" (ngSubmit)="enviar()">
-    <div>
-      <label for="idCliente">Cliente: </label>
-      <select id="idCliente" formControlName="idCliente" required>
+<div class="container mt-4">
+  <form [formGroup]="form">
+    <div class="form-group">
+      <label for="idCliente">Selecciona un cliente:</label>
+      <select id="idCliente" formControlName="idCliente" class="form-control">
         <option value="" disabled selected>Selecciona un cliente...</option>
         <option *ngFor="let cliente of clientes" [value]="cliente.id">
-          {{ cliente.nombre }}
+          {{ cliente.nombre }} {{ cliente.apellido }}
         </option>
       </select>
-      
     </div>
-  
-    <button type="submit">Enviar</button>
   </form>
 
-    <!-- Tabla Pedidos -->
-    <table>
-      <thead>
+  <div *ngIf="selectedCliente" class="mt-4">
+    <h4>Pedidos de {{ selectedCliente.nombre }} {{ selectedCliente.apellido }}</h4>
+
+    <table class="table table-bordered mt-3">
+      <thead class="thead-dark">
         <tr>
-          <th scope="col">ID Pedido</th>
-          <th scope="col">ID Producto</th>
-          <th scope="col">Estatus</th>
-          <th scope="col">Total</th>
+          <th>#</th>
+          <th>Productos</th>
+          <th>Total</th>
+          <th>Estatus</th>
         </tr>
       </thead>
-    <tbody>
-    <tr *ngFor="let pedido of pedidos; let i = index">
-        <th scope="row">{{i+1}}</th>
-        <td hidden>{{pedido.id}}</td>
-        <td>{{pedido.idProducto}}</td>
-        <td>{{pedido.idEstatus}}</td>
-        <td>{{pedido.total}}</td>
-    </tr>
-    </tbody>
-  </table>
-
-
-
-
-  
-  <!-- <table>
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">Apellido</th>
-        <th scope="col">Email</th>
-        <th scope="col">Telefono</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let cliente of clientes; let i = index">
-        <td>{{cliente.id}}</td>
-        <td>{{cliente.nombre}}</td>
-        <td>{{cliente.apellido}}</td>
-        <td>{{cliente.email}}</td>
-        <td>{{cliente.telefono}}</td>
-      </tr>
-    </tbody>
-    </table> -->
+      <tbody>
+        <tr *ngFor="let pedido of pedidos; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ obtenerNombresProductos(pedido.idProducto) }}</td>
+          <td>{{ pedido.total | currency }}</td>
+          <td>
+            {{
+              pedido.idEstatus === 1 ? 'Pendiente' :
+              pedido.idEstatus === 2 ? 'Enviado' :
+              pedido.idEstatus === 3 ? 'Entregado' :
+              pedido.idEstatus === 4 ? 'Cancelado' : 'Desconocido'
+            }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
