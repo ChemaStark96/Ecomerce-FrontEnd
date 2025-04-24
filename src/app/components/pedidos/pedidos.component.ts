@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Pedido } from '../../models/Pedido.model';
 import { Cliente } from '../../models/Cliente.model';
 import { Producto } from '../../models/Producto.model';
@@ -37,23 +37,11 @@ export class PedidosComponent implements OnInit {
     this.pedidoForm = this.fb.group({
       id: [null],
       idCliente: [null, Validators.required],
-      idProducto: [[], Validators.required],
+      productos: this.fb.array([], Validators.required),  // Cambié para usar FormArray
       total: [0],
       idEstatus: [1, Validators.required]
     });
   }
-
-  obtenerNombreCliente(id: number): string {
-    const cliente = this.clientes.find(c => c.id === id);
-    return cliente ? `${cliente.nombre} ${cliente.apellido}` : 'Cliente no encontrado';
-  }
-  
-  obtenerNombresProductos(ids: number[]): string {
-    const nombres = this.productos
-      .filter(p => ids.includes(p.id || 0))
-      .map(p => p.nombre);
-    return nombres.join(', ');
-  }  
 
   ngOnInit(): void {
     this.listarPedidos();
@@ -84,19 +72,62 @@ export class PedidosComponent implements OnInit {
     });
   }
 
+  obtenerNombreCliente(idCliente: number): string {
+    const cliente = this.clientes.find(c => c.id === idCliente);
+    return cliente ? cliente.nombre : 'Cliente no encontrado';
+  }
+
+  obtenerNombresProductos(idsProductos: number[]): string {
+    const productosSeleccionados = idsProductos.map(id => {
+      const producto = this.productos.find(p => p.id === id);
+      return producto ? producto.nombre : 'Producto no encontrado';
+    });
+    return productosSeleccionados.join(', ');
+  }
+  
+
+  // Obtención del FormArray
+  get productosForm() {
+    return this.pedidoForm.get('productos') as FormArray;
+  }
+
+  // Agregar un nuevo producto con cantidad al formulario
+  addProducto(): void {
+    const productoGroup = this.fb.group({
+      idProducto: [null, Validators.required],
+      cantidad: [1, [Validators.required, Validators.min(1)]]
+    });
+    this.productosForm.push(productoGroup);
+  }
+
+  // Eliminar un producto del formulario
+  removeProducto(index: number): void {
+    this.productosForm.removeAt(index);
+  }
+
   toggleForm(): void {
     this.showForm = true;
     this.textoModal = 'Registrar Pedido';
     this.isEditMode = false;
     this.selectedPedido = null;
-    this.pedidoForm.reset({ idEstatus: 1, idProducto: [] });
+    this.pedidoForm.reset({ idEstatus: 1 });
+    this.productosForm.clear();  // Limpiar productos previamente seleccionados
   }
 
   onSubmit(): void {
     if (this.pedidoForm.invalid) return;
-
     this.guardando = true;
-    const data = this.pedidoForm.value;
+
+    const formValue = this.pedidoForm.value;
+
+    const productosConCantidad: number[] = [];
+    formValue.productos.forEach((producto: { idProducto: number; cantidad: number }) => {
+      for (let i = 0; i < producto.cantidad; i++) {
+        productosConCantidad.push(producto.idProducto);
+      }
+    });
+
+    const data = { ...formValue, idProducto: productosConCantidad };
 
     if (this.isEditMode && data.id) {
       this.pedidosService.putPedidos(data).subscribe({
@@ -132,43 +163,48 @@ export class PedidosComponent implements OnInit {
       Swal.fire('No editable', 'Este pedido no se puede editar', 'info');
       return;
     }
-  
+
     this.selectedPedido = pedido;
     this.isEditMode = true;
     this.textoModal = 'Editar Pedido';
     this.showForm = true;
     this.pedidoForm.patchValue(pedido);
+
+    // Se asume que "idProducto" en el pedido es un array de IDs, por lo que agregamos los productos al FormArray.
+    const productosSeleccionados = pedido.idProducto.map(id => ({ idProducto: id, cantidad: 1 }));
+    this.productosForm.clear();
+    productosSeleccionados.forEach(producto => this.productosForm.push(this.fb.group(producto)));
   }
 
   eliminarPedido(pedido: Pedido): void {
     if (pedido.idEstatus === 4) return;
 
-  this.eliminandoId = pedido.id;
+    this.eliminandoId = pedido.id;
 
-  Swal.fire({
-    title: '¿Cancelar pedido?',
-    text: 'Esta acción marcará el pedido como cancelado',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sí, cancelar',
-    cancelButtonText: 'Volver'
-  }).then(result => {
-    if (result.isConfirmed && pedido.id != null) {
-      const cancelado: Pedido = { ...pedido, idEstatus: 4 };
-      this.pedidosService.putPedidos(cancelado).subscribe({
-        next: () => {
-          Swal.fire('Pedido cancelado', '', 'success');
-          this.listarPedidos(); // ya no se listará por el filtro de arriba
-          this.eliminandoId = null;
-        },
-        error: () => {
-          Swal.fire('Error', 'No se pudo cancelar el pedido', 'error');
-          this.eliminandoId = null;
-        }
-      });
-    } else {
-      this.eliminandoId = null;
-    }
-  });
+    Swal.fire({
+      title: '¿Cancelar pedido?',
+      text: 'Esta acción marcará el pedido como cancelado',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cancelar',
+      cancelButtonText: 'Volver'
+    }).then(result => {
+      if (result.isConfirmed && pedido.id != null) {
+        const cancelado: Pedido = { ...pedido, idEstatus: 4 };
+        this.pedidosService.putPedidos(cancelado).subscribe({
+          next: () => {
+            Swal.fire('Pedido cancelado', '', 'success');
+            this.listarPedidos(); // ya no se listará por el filtro de arriba
+            this.eliminandoId = null;
+          },
+          error: () => {
+            Swal.fire('Error', 'No se pudo cancelar el pedido', 'error');
+            this.eliminandoId = null;
+          }
+        });
+      } else {
+        this.eliminandoId = null;
+      }
+    });
   }
 }
