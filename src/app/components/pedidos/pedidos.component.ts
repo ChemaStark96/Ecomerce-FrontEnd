@@ -1,6 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Pedido } from '../../models/Pedido.model';
+import { Cliente } from '../../models/Cliente.model';
+import { Producto } from '../../models/Producto.model';
+import { PedidosService } from '../../services/pedidos.service';
+import { ClientesService } from '../../services/clientes.service';
+import { ProductosService } from '../../services/productos.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-pedidos',
@@ -11,58 +17,110 @@ import { Pedido } from '../../models/Pedido.model';
 export class PedidosComponent implements OnInit {
 
   pedidos: Pedido[] = [];
+  clientes: Cliente[] = [];
+  productos: Producto[] = [];
+
   pedidoForm: FormGroup;
-  showForm: boolean = false;
-  isEditMode: boolean = false;
-  textoModal: string = 'Registrar Pedido';
+  showForm = false;
+  isEditMode = false;
+  textoModal = 'Registrar Pedido';
   selectedPedido: Pedido | null = null;
   eliminandoId: number | null = null;
-  guardando: boolean = false;
+  guardando = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private pedidosService: PedidosService,
+    private clientesService: ClientesService,
+    private productosService: ProductosService
+  ) {
     this.pedidoForm = this.fb.group({
       id: [null],
       idCliente: [null, Validators.required],
-      idProducto: [null, Validators.required],
-      total: [0, [Validators.required, Validators.min(0)]],
+      idProducto: [[], Validators.required],
+      total: [0],
       idEstatus: [1, Validators.required]
     });
   }
 
   ngOnInit(): void {
     this.listarPedidos();
-    // Aquí cargar clientes y productos si llegan as er necesarios
+    this.cargarClientes();
+    this.cargarProductos();
   }
 
   listarPedidos(): void {
-    // consumir this.pedidosService.getPedidos()...
+    this.pedidosService.getPedidos().subscribe({
+      next: resp => {
+        this.pedidos = resp.filter(p =>
+          p.idEstatus === 1 || p.idEstatus === 2 || p.idEstatus === 3
+        );
+      },
+      error: () => Swal.fire('Error', 'No se pudieron cargar los pedidos', 'error')
+    });
+  }
+
+  cargarClientes(): void {
+    this.clientesService.getClientes().subscribe({
+      next: resp => this.clientes = resp
+    });
+  }
+
+  cargarProductos(): void {
+    this.productosService.getProductos().subscribe({
+      next: resp => this.productos = resp
+    });
   }
 
   toggleForm(): void {
-    this.showForm = !this.showForm;
+    this.showForm = true;
     this.textoModal = 'Registrar Pedido';
     this.isEditMode = false;
     this.selectedPedido = null;
-    this.pedidoForm.reset();
+    this.pedidoForm.reset({ idEstatus: 1, idProducto: [] });
   }
 
   onSubmit(): void {
     if (this.pedidoForm.invalid) return;
-    this.guardando = true;
 
+    this.guardando = true;
     const data = this.pedidoForm.value;
 
-    if (this.isEditMode) {
-      // pedidosService.actualizarPedido(data)
+    if (this.isEditMode && data.id) {
+      this.pedidosService.putPedidos(data).subscribe({
+        next: () => {
+          Swal.fire('Pedido actualizado', '', 'success');
+          this.listarPedidos();
+          this.guardando = false;
+          this.toggleForm();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo actualizar el pedido', 'error');
+          this.guardando = false;
+        }
+      });
     } else {
-      // pedidosService.crearPedido(data)
+      this.pedidosService.postPedidos(data).subscribe({
+        next: () => {
+          Swal.fire('Pedido creado', '', 'success');
+          this.listarPedidos();
+          this.guardando = false;
+          this.toggleForm();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo registrar el pedido', 'error');
+          this.guardando = false;
+        }
+      });
     }
-    // this.listarPedidos();
-    // this.guardando = false;
-    // this.toggleForm();
   }
 
   editPedido(pedido: Pedido): void {
+    if (pedido.idEstatus === 3 || pedido.idEstatus === 4) {
+      Swal.fire('No editable', 'Este pedido no se puede editar', 'info');
+      return;
+    }
+  
     this.selectedPedido = pedido;
     this.isEditMode = true;
     this.textoModal = 'Editar Pedido';
@@ -71,9 +129,34 @@ export class PedidosComponent implements OnInit {
   }
 
   eliminarPedido(pedido: Pedido): void {
-    this.eliminandoId = pedido.id;
-    // pedidosService.eliminarPedido(pedido.id)
-    // this.listarPedidos();
-    // this.eliminandoId = null;
+    if (pedido.idEstatus === 4) return;
+
+  this.eliminandoId = pedido.id;
+
+  Swal.fire({
+    title: '¿Cancelar pedido?',
+    text: 'Esta acción marcará el pedido como cancelado',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, cancelar',
+    cancelButtonText: 'Volver'
+  }).then(result => {
+    if (result.isConfirmed && pedido.id != null) {
+      const cancelado: Pedido = { ...pedido, idEstatus: 4 };
+      this.pedidosService.putPedidos(cancelado).subscribe({
+        next: () => {
+          Swal.fire('Pedido cancelado', '', 'success');
+          this.listarPedidos(); // ya no se listará por el filtro de arriba
+          this.eliminandoId = null;
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo cancelar el pedido', 'error');
+          this.eliminandoId = null;
+        }
+      });
+    } else {
+      this.eliminandoId = null;
+    }
+  });
   }
 }
