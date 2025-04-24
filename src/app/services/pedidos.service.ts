@@ -29,4 +29,7 @@ export class PedidosService {
   deletePedidos(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}`);
   }
+  getPedidosActivos(): Observable<Pedido[]>{
+    return this.http.get<Pedido[]>(this.apiUrl+'activos/');
+  }
 }
