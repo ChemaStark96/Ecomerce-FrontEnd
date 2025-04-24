@@ -43,6 +43,18 @@ export class PedidosComponent implements OnInit {
     });
   }
 
+  obtenerNombreCliente(id: number): string {
+    const cliente = this.clientes.find(c => c.id === id);
+    return cliente ? `${cliente.nombre} ${cliente.apellido}` : 'Cliente no encontrado';
+  }
+  
+  obtenerNombresProductos(ids: number[]): string {
+    const nombres = this.productos
+      .filter(p => ids.includes(p.id || 0))
+      .map(p => p.nombre);
+    return nombres.join(', ');
+  }  
+
   ngOnInit(): void {
     this.listarPedidos();
     this.cargarClientes();
