@@ -112,16 +112,18 @@ export class PedidosComponent implements OnInit {
     this.selectedPedido = null;
   
     this.pedidoForm.reset();
-    this.pedidoForm.get('idEstatus')?.setValue(null);
-    this.pedidoForm.get('idCliente')?.setValue(null);
-    this.productosForm.clear(); // limpiar los productos correctamente
-  }  
+    this.pedidoForm.get('idEstatus')?.setValue(1);
+    this.pedidoForm.get('idCliente')?.enable();
+    this.productosForm.clear(); // Limpiar los productos
+  
+    // Asegurar que nuevos controles vengan habilitados (en addProducto)
+  }   
 
   onSubmit(): void {
     if (this.pedidoForm.invalid) return;
     this.guardando = true;
 
-    const formValue = this.pedidoForm.value;
+    const formValue = this.pedidoForm.getRawValue();
 
     const productosConCantidad: number[] = [];
     formValue.productos.forEach((producto: { idProducto: number; cantidad: number }) => {
@@ -166,18 +168,28 @@ export class PedidosComponent implements OnInit {
       Swal.fire('No editable', 'Este pedido no se puede editar', 'info');
       return;
     }
-
+  
     this.selectedPedido = pedido;
     this.isEditMode = true;
     this.textoModal = 'Editar Pedido';
     this.showForm = true;
+  
     this.pedidoForm.patchValue(pedido);
-
-    // Se asume que "idProducto" en el pedido es un array de IDs, por lo que agregamos los productos al FormArray.
+  
+    // Deshabilitar el campo de cliente
+    this.pedidoForm.get('idCliente')?.disable();
+  
+    // Limpiar y cargar los productos al form array
     const productosSeleccionados = pedido.idProducto.map(id => ({ idProducto: id, cantidad: 1 }));
     this.productosForm.clear();
-    productosSeleccionados.forEach(producto => this.productosForm.push(this.fb.group(producto)));
-  }
+    productosSeleccionados.forEach(producto => {
+      const grupo = this.fb.group({
+        idProducto: [{ value: producto.idProducto, disabled: true }, Validators.required],
+        cantidad: [{ value: producto.cantidad, disabled: true }, [Validators.required, Validators.min(1)]]
+      });
+      this.productosForm.push(grupo);
+    });
+  }  
 
   eliminarPedido(pedido: Pedido): void {
     if (pedido.idEstatus === 4) return;
