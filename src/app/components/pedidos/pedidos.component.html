@@ -11,8 +11,8 @@
       <thead class="table-dark">
         <tr>
           <th>#</th>
-          <th>ID Cliente</th>
-          <th>ID Producto</th>
+          <th>Cliente</th>
+          <th>Producto</th>
           <th>Total</th>
           <th>Estatus</th>
           <th>Opciones</th>
@@ -21,8 +21,8 @@
       <tbody>
         <tr *ngFor="let pedido of pedidos; let i = index">
           <td>{{ i + 1 }}</td>
-          <td>{{ pedido.idCliente }}</td>
-          <td>{{ pedido.idProducto }}</td>
+          <td>{{ obtenerNombreCliente(pedido.idCliente) }}</td>
+          <td>{{ obtenerNombresProductos(pedido.idProducto) }}</td>
           <td>{{ pedido.total | currency }}</td>
           <td>
             {{
