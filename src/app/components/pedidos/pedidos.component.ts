@@ -37,7 +37,7 @@ export class PedidosComponent implements OnInit {
     this.pedidoForm = this.fb.group({
       id: [null],
       idCliente: [null, Validators.required],
-      productos: this.fb.array([], Validators.required),  // Cambié para usar FormArray
+      productos: this.fb.array([], Validators.required),
       total: [0],
       idEstatus: [1, Validators.required]
     });
@@ -110,9 +110,12 @@ export class PedidosComponent implements OnInit {
     this.textoModal = 'Registrar Pedido';
     this.isEditMode = false;
     this.selectedPedido = null;
-    this.pedidoForm.reset({ idEstatus: 1 });
-    this.productosForm.clear();  // Limpiar productos previamente seleccionados
-  }
+  
+    this.pedidoForm.reset();
+    this.pedidoForm.get('idEstatus')?.setValue(null);
+    this.pedidoForm.get('idCliente')?.setValue(null);
+    this.productosForm.clear(); // limpiar los productos correctamente
+  }  
 
   onSubmit(): void {
     if (this.pedidoForm.invalid) return;
