@@ -14,7 +14,8 @@
         <th>Cliente</th>
         <th>Producto</th>
         <th>Total</th>
-        <th>Estatus</th>
+        <th>Estatus</th>   
+        <th>Fecha de Creacion</th>
         <th>Opciones</th>
       </tr>
     </thead>
@@ -32,6 +33,7 @@
             pedido.idEstatus === 4 ? 'Cancelado' : 'Desconocido'
           }}
         </td>
+        <td>{{pedido.fechaCreacion}} </td>
         <td>
           <button class="btn btn-primary btn-sm me-1" (click)="editPedido(pedido)">
             <i class="fa fa-edit"></i> Editar

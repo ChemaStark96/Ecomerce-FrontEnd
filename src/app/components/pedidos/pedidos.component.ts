@@ -39,7 +39,8 @@ export class PedidosComponent implements OnInit {
       idCliente: [null, Validators.required],
       productos: this.fb.array([], Validators.required),  // Cambié para usar FormArray
       total: [0],
-      idEstatus: [1, Validators.required]
+      idEstatus: [1, Validators.required],
+      fechaCreacion: ['', Validators.required]
     });
   }
 

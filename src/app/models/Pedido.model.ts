@@ -4,4 +4,5 @@ export interface Pedido {
     idProducto: number[];
     total: number; // se calcula en el backend
     idEstatus: number;
+    fechaCreacion: String;
 }  
