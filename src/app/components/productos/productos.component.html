@@ -1,74 +1,73 @@
 <div class="container-fluid mt-2" style="width: 95%;">
-    <h2>Productos</h2>
-  
-    <div class="d-flex justify-content-between mb-3">
-      <button (click)="toggleForm()" class="btn btn-success">
-        <i class="fa-solid fa-plus"></i> Registrar Producto
-      </button>
-    </div>
-  
-    <table class="table table-striped table-bordered">
-      <thead class="table-dark">
-        <tr>
-          <th>#</th>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Precio</th>
-          <th>Stock</th>
-          <th>Opciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let producto of productos; let i = index">
-          <td>{{ i + 1 }}</td>
-          <td>{{ producto.nombre }}</td>
-          <td>{{ producto.descripcion }}</td>
-          <td>{{ producto.precio | currency }}</td>
-          <td>{{ producto.stock }}</td>
-          <td>
-            <button class="btn btn-primary btn-sm me-1" (click)="editProducto(producto)">
-              <i class="fa fa-edit"></i> Editar
-            </button>
-            <button class="btn btn-danger btn-sm" (click)="eliminarProducto(producto)" [disabled]="eliminandoId === producto.id">
-              <ng-container *ngIf="eliminandoId !== producto.id">
-                <i class="fa fa-trash"></i> Eliminar
-              </ng-container>
-              <ng-container *ngIf="eliminandoId === producto.id">
-                <span class="spinner-border spinner-border-sm"></span> Eliminando...
-              </ng-container>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <!-- FORMULARIO -->
-    <form [formGroup]="productoForm" (ngSubmit)="onSubmit()" *ngIf="showForm">
-      <h4>{{ textoModal }}</h4>
-      <div class="form-group mb-2">
-        <label>Nombre:</label>
-        <input class="form-control" formControlName="nombre" />
-      </div>
-      <div class="form-group mb-2">
-        <label>Descripción:</label>
-        <input class="form-control" formControlName="descripcion" />
-      </div>
-      <div class="form-group mb-2">
-        <label>Precio:</label>
-        <input type="number" class="form-control" formControlName="precio" />
-      </div>
-      <div class="form-group mb-2">
-        <label>Stock:</label>
-        <input type="number" class="form-control" formControlName="stock" />
-      </div>
-      <button class="btn btn-success" type="submit" [disabled]="productoForm.invalid || guardando">
-        <ng-container *ngIf="!guardando">
-          <i class="fa fa-save"></i> Guardar
-        </ng-container>
-        <ng-container *ngIf="guardando">
-          <span class="spinner-border spinner-border-sm"></span> Guardando...
-        </ng-container>
-      </button>
-    </form>
+  <h2>Productos</h2>
+
+  <div class="d-flex justify-content-between mb-3">
+    <button (click)="toggleForm()" class="btn btn-success">
+      <i class="fa-solid fa-plus"></i> Registrar Producto
+    </button>
   </div>
-  
+
+  <table class="table table-striped table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let producto of productos; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ producto.nombre }}</td>
+        <td>{{ producto.descripcion }}</td>
+        <td>{{ producto.precio | currency }}</td>
+        <td>{{ producto.stock }}</td>
+        <td>
+          <button class="btn btn-primary btn-sm me-1" (click)="editProducto(producto)">
+            <i class="fa fa-edit"></i> Editar
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="eliminarProducto(producto)" [disabled]="eliminandoId === producto.id">
+            <ng-container *ngIf="eliminandoId !== producto.id">
+              <i class="fa fa-trash"></i> Eliminar
+            </ng-container>
+            <ng-container *ngIf="eliminandoId === producto.id">
+              <span class="spinner-border spinner-border-sm"></span> Eliminando...
+            </ng-container>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- FORMULARIO -->
+  <form [formGroup]="productoForm" (ngSubmit)="onSubmit()" *ngIf="showForm">
+    <h4>{{ textoModal }}</h4>
+    <div class="form-group mb-2">
+      <label>Nombre:</label>
+      <input class="form-control" formControlName="nombre" />
+    </div>
+    <div class="form-group mb-2">
+      <label>Descripción:</label>
+      <input class="form-control" formControlName="descripcion" />
+    </div>
+    <div class="form-group mb-2">
+      <label>Precio:</label>
+      <input type="number" class="form-control" formControlName="precio" />
+    </div>
+    <div class="form-group mb-2">
+      <label>Stock:</label>
+      <input type="number" class="form-control" formControlName="stock" />
+    </div>
+    <button class="btn btn-success" type="submit" [disabled]="productoForm.invalid || guardando">
+      <ng-container *ngIf="!guardando">
+        <i class="fa fa-save"></i> Guardar
+      </ng-container>
+      <ng-container *ngIf="guardando">
+        <span class="spinner-border spinner-border-sm"></span> Guardando...
+      </ng-container>
+    </button>
+  </form>
+</div>
