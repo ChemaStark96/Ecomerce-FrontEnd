@@ -52,7 +52,7 @@
   </table>
 
   <!-- FORMULARIO -->
-  <form [formGroup]="pedidoForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="pedidoForm" (ngSubmit)="onSubmit()" *ngIf="showForm">
     <div class="modal" tabindex="-1" [ngClass]="{'show': showForm}">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -67,6 +67,14 @@
                   {{ cliente.nombre }}
                 </option>
               </select>
+              <div class="form-group mt-2">
+                <label for="idEstatus">Estatus</label>
+                <select id="idEstatus" class="form-select" formControlName="idEstatus" [disabled]="!isEditMode">
+                  <option [value]="1">Pendiente</option>
+                  <option [value]="2">Enviado</option>
+                  <option [value]="3">Entregado</option>
+                </select>
+              </div>
             </div>
             
             <!-- Productos -->
@@ -82,12 +90,20 @@
                 <label for="cantidad">Cantidad</label>
                 <input formControlName="cantidad" type="number" class="form-control" min="1" />
 
-                <button type="button" class="btn btn-danger mt-2" (click)="removeProducto(i)">
+                <button
+                  *ngIf="!isEditMode"
+                  type="button"
+                  class="btn btn-danger mt-2"
+                  (click)="removeProducto(i)">
                   <i class="fa fa-trash"></i> Eliminar Producto
                 </button>
               </div>
             </div>
-            <button type="button" class="btn btn-secondary mt-2" (click)="addProducto()">
+            <button
+              *ngIf="!isEditMode"
+              type="button"
+              class="btn btn-secondary mt-2"
+              (click)="addProducto()">
               <i class="fa fa-plus"></i> Agregar Producto
             </button>
           </div>
@@ -97,7 +113,7 @@
               <span *ngIf="guardando">Guardando...</span>
               <span *ngIf="!guardando">Guardar</span>
             </button>
-          </div>
+          </div>          
         </div>
       </div>
     </div>
