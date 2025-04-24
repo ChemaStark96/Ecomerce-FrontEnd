@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Producto } from '../models/Producto.model';
-import { enviroment } from '../environments/enviroment';
+import { environment } from '../environments/environment';
 
 
 @Injectable({
@@ -10,7 +10,7 @@ import { enviroment } from '../environments/enviroment';
 })
 export class ProductosService {
 
-  private apiUrl: string = enviroment.apiUrl +'productos/';  
+  private apiUrl: string = environment.apiUrl +'productos/';  
 
   constructor(private http: HttpClient) { }
 
