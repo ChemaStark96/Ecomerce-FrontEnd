@@ -39,8 +39,7 @@ export class PedidosComponent implements OnInit {
       idCliente: [null, Validators.required],
       productos: this.fb.array([], Validators.required),
       total: [0],
-      idEstatus: [1, Validators.required],
-      fechaCreacion: ['', Validators.required]
+      idEstatus: [1, Validators.required]
     });
   }
 
@@ -116,8 +115,6 @@ export class PedidosComponent implements OnInit {
     this.pedidoForm.get('idEstatus')?.setValue(1);
     this.pedidoForm.get('idCliente')?.enable();
     this.productosForm.clear(); // Limpiar los productos
-  
-    // Asegurar que nuevos controles vengan habilitados (en addProducto)
   }   
 
   onSubmit(): void {
