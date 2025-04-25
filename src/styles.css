@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
-/* 🌐 RESET BÁSICO */
+/* RESET BÁSICO */
 * {
   margin: 0;
   padding: 0;
@@ -17,7 +17,7 @@ html, body {
   scroll-behavior: smooth;
 }
 
-/* 🔤 Tipografía general */
+/* Tipografía general */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   margin-bottom: 0.5em;
@@ -29,7 +29,7 @@ p {
   color: #cccccc;
 }
 
-/* 🔗 Enlaces */
+/* Enlaces */
 a {
   color: #4dabf7;
   text-decoration: none;
@@ -40,7 +40,7 @@ a:hover {
   color: #82cfff;
 }
 
-/* 🧼 Botones */
+/* Botones */
 button {
   font-family: 'Montserrat', sans-serif;
   border: none;
@@ -57,7 +57,7 @@ button:hover {
   background-color: #339af0;
 }
 
-/* 📝 Inputs */
+/* Inputs */
 input, textarea, select {
   font-family: inherit;
   padding: 0.6rem;
@@ -72,7 +72,7 @@ input:focus, textarea:focus, select:focus {
   border-color: #4dabf7;
 }
 
-/* 🧱 Layout helpers */
+/* Layout helpers */
 .container {
   width: 100%;
   max-width: 1200px;

@@ -1,0 +1,43 @@
+<div class="container mt-4">
+  <form [formGroup]="form">
+    <div class="form-group">
+      <label for="idCliente">Selecciona un cliente:</label>
+      <select id="idCliente" formControlName="idCliente" class="form-control">
+        <option value="" disabled selected>Selecciona un cliente...</option>
+        <option *ngFor="let cliente of clientes" [value]="cliente.id">
+          {{ cliente.nombre }} {{ cliente.apellido }}
+        </option>
+      </select>
+    </div>
+  </form>
+
+  <div *ngIf="selectedCliente" class="mt-4">
+    <h4>Pedidos de {{ selectedCliente.nombre }} {{ selectedCliente.apellido }}</h4>
+
+    <table class="table table-bordered mt-3">
+      <thead class="thead-dark">
+        <tr>
+          <th>#</th>
+          <th>Productos</th>
+          <th>Total</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pedido of pedidos; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ obtenerNombresProductos(pedido.idProducto) }}</td>
+          <td>{{ pedido.total | currency }}</td>
+          <td>
+            {{
+              pedido.idEstatus === 1 ? 'Pendiente' :
+              pedido.idEstatus === 2 ? 'Enviado' :
+              pedido.idEstatus === 3 ? 'Entregado' :
+              pedido.idEstatus === 4 ? 'Cancelado' : 'Desconocido'
+            }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
