@@ -13,7 +13,6 @@
 div {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 1rem;
-  .container-fluid {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -23,7 +22,6 @@ div {
   margin-top: 0.5rem;
 }
 
-}
 
 /* Título */
 h2 {
@@ -38,7 +36,7 @@ h2 {
 button {
   background-color: rgb(255, 0, 93);
   border: none;
-  padding: 15px 25px;
+  padding: 6px 18px;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
@@ -66,11 +64,10 @@ table {
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
-  padding: 12px 15px;
+  padding: 5px 5px;
   text-align: left;
 }
 
@@ -123,13 +120,14 @@ input[type="number"] {
   border: 1px solid #ced4da;
   border-radius: 6px;
   background-color: #fff;
+  color: #343a40;
   font-size: 1rem;
 }
 
 /* Botones individuales dentro de productos */
 [formArrayName="productos"] > div {
   margin-bottom: 1rem;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid;
   padding-bottom: 1rem;
 }
 
