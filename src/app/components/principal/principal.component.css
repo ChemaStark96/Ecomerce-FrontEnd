@@ -140,6 +140,28 @@ tbody tr td:last-child:contains('Cancelado') {
   color: #dc3545;
 }
 
+
+/* Añade estas propiedades a tus estilos de tabla para controlar la altura */
+.table tr {
+  height: auto; /* Elimina cualquier altura fija */
+}
+
+.table td {
+  padding: 0.75rem 1rem; /* Ajusta el padding para reducir la altura */
+  vertical-align: middle;
+  line-height: 1.2; /* Reduce el interlineado */
+}
+
+/* Si hay contenido que podría estar causando el problema */
+.table td * {
+  margin: 0; /* Elimina márgenes que podrían añadir espacio extra */
+}
+
+/* Si hay imágenes en la tabla que podrían estar expandiendo las celdas */
+.table td img {
+  max-height: 40px; /* Limita la altura de posibles imágenes */
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .container {
