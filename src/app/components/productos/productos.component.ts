@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Producto } from '../../models/Producto.model';
+import { ProductosService } from '../../services/productos.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-productos',
@@ -19,11 +21,14 @@ export class ProductosComponent implements OnInit {
   eliminandoId: number | null = null;
   guardando: boolean = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private productosService: ProductosService
+  ) {
     this.productoForm = this.fb.group({
       id: [null],
       nombre: ['', [Validators.required]],
-      descripcion: ['', [Validators.required, Validators.maxLength(100)]],
+      descripcion: ['', [Validators.required]],
       precio: [0, [Validators.required, Validators.min(0)]],
       stock: [0, [Validators.required, Validators.min(0)]]
     });
@@ -34,11 +39,14 @@ export class ProductosComponent implements OnInit {
   }
 
   listarProductos(): void {
-    //  Aquí se consume this.productosService.getProductos()...
+    this.productosService.getProductos().subscribe({
+      next: resp => this.productos = resp,
+      error: () => Swal.fire('Error', 'No se pudieron cargar los productos', 'error')
+    });
   }
 
   toggleForm(): void {
-    this.showForm = !this.showForm;
+    this.showForm = true;
     this.textoModal = 'Registrar Producto';
     this.isEditMode = false;
     this.selectedProducto = null;
@@ -46,21 +54,40 @@ export class ProductosComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.productoForm.invalid) return;
-    this.guardando = true;
+    console.log('🚀 onSubmit ejecutado', this.productoForm.value);
 
+    if (this.productoForm.invalid) return;
+
+    this.guardando = true;
     const data = this.productoForm.value;
 
-    if (this.isEditMode) {
-      //  Aquí se consume this.productosService.actualizarProducto(data)
+    if (this.isEditMode && data.id) {
+      this.productosService.putProductos(data).subscribe({
+        next: () => {
+          Swal.fire('Producto actualizado', '', 'success');
+          this.listarProductos();
+          this.guardando = false;
+          this.toggleForm();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo actualizar el producto', 'error');
+          this.guardando = false;
+        }
+      });
     } else {
-      // Aquí se consume this.productosService.crearProducto(data)
+      this.productosService.postProductos(data).subscribe({
+        next: () => {
+          Swal.fire('Producto creado', '', 'success');
+          this.listarProductos();
+          this.guardando = false;
+          this.toggleForm();
+        },
+        error: () => {
+          Swal.fire('Error', 'No se pudo registrar el producto', 'error');
+          this.guardando = false;
+        }
+      });
     }
-
-    // Luego de consumir:
-    // this.listarProductos();
-    // this.guardando = false;
-    // this.toggleForm();
   }
 
   editProducto(producto: Producto): void {
@@ -73,8 +100,29 @@ export class ProductosComponent implements OnInit {
 
   eliminarProducto(producto: Producto): void {
     this.eliminandoId = producto.id;
-    //  Aquí va this.productosService.eliminarProducto(producto.id)
-    // this.listarProductos();
-    // this.eliminandoId = null;
+    Swal.fire({
+      title: '¿Eliminar producto?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then(result => {
+      if (result.isConfirmed && producto.id != null) {
+        this.productosService.deleteProductos(producto.id).subscribe({
+          next: () => {
+            Swal.fire('Producto eliminado', '', 'success');
+            this.listarProductos();
+            this.eliminandoId = null;
+          },
+          error: () => {
+            Swal.fire('Error', 'No se pudo eliminar el producto', 'error');
+            this.eliminandoId = null;
+          }
+        });
+      } else {
+        this.eliminandoId = null;
+      }
+    });
   }
 }
