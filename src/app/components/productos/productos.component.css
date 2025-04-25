@@ -1,246 +1,246 @@
 /* Contenedor principal */
 div:first-child {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-}
-
-/* Estilo del título */
-h2 {
-  font-size: 70px;
-  margin-bottom: 20px;
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-  color: #ffffff;
-}
-
-/* Botón Registrar Producto */
-.btn-success {
-  background-color: rgb(255, 0, 93);
-  border: none;
-  padding: 15px 25px;
-  border-radius: 4px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  color: white;
-  margin-bottom: 20px;
-}
-
-.btn-success:hover {
-  background-color: rgb(219, 0, 51);
-}
-
-/* Estilos para la tabla */
-table {
-  width: 90%;
-  max-width: 1200px;
-  border-collapse: collapse;
-  background-color: #fff;
-  color: #000000;
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.table-dark {
-  background-color: #343a40;
-  color: white;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.table-bordered {
-  border: 1px solid #dee2e6;
-}
-
-.table-bordered th,
-.table-bordered td {
-  border: 1px solid #dee2e6;
-}
-
-th, td {
-  padding: 12px 15px;
-  text-align: left;
-}
-
-th {
-  font-weight: 600;
-}
-
-tbody tr:hover {
-  background-color: #171717 !important;
-  color: #f0f0f0;
-}
-
-/* Estilos para los botones de acción */
-.btn {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  font-size: 14px;
-}
-
-.btn-primary {
-  background-color: #2187f4;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #085db8;
-}
-
-.btn-danger {
-  background-color: #dc3545;
-  color: white;
-}
-
-.btn-danger:hover {
-  background-color: #bb2d3b;
-}
-
-.btn-sm {
-  padding: 6px 10px;
-  font-size: 13px;
-}
-
-.me-1 {
-  margin-right: 8px;
-}
-
-button[disabled] {
-  background-color: #6c757d;
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* Estilos para el formulario */
-form {
-  background-color: #fff;
-  padding: 25px;
-  border-radius: 8px;
-  margin-top: 2rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  width: 50%;
-  min-width: 350px;
-  max-width: 600px;
-}
-
-form h4 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
-  font-size: 1.5rem;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-label {
-  font-weight: 500;
-  display: block;
-  margin-bottom: 0.5rem;
-  color: #201f1f;
-}
-
-.form-control {
-  width: 100%;
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
-}
-
-/* Estilos para campos numéricos */
-input[type="number"] {
-  text-align: right;
-}
-
-/* Estilos para el campo de moneda */
-td:nth-child(4) {
-  font-weight: bold;
-  color: #28a745;
-}
-
-/* Spinner */
-.spinner-border {
-  width: 1rem;
-  height: 1rem;
-  border-width: 0.15em;
-  vertical-align: text-bottom;
-  display: inline-block;
-}
-
-/* Estilos responsivos */
-@media (max-width: 992px) {
-  .container-fluid {
-    width: 100% !important;
-    padding: 15px;
-  }
-  
-  form {
-    width: 70%;
-  }
-}
-
-@media (max-width: 768px) {
-  h2 {
-    font-size: 50px;
-  }
-  
-  table {
-    display: block;
-    overflow-x: auto;
-  }
-  
-  form {
-    width: 85%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     padding: 20px;
   }
-}
-
-@media (max-width: 576px) {
+  
+  /* Estilo del título */
   h2 {
-    font-size: 40px;
+    font-size: 70px;
+    margin-bottom: 20px;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    color: #ffffff;
   }
   
-  form {
-    width: 95%;
-    padding: 15px;
-    min-width: auto;
-  }
-  
-  .form-control {
-    padding: 8px 12px;
-    font-size: 14px;
-  }
-  
+  /* Botón Registrar Producto */
   .btn-success {
-    padding: 12px 18px;
-    font-size: 15px;
+    background-color: rgb(255, 0, 93);
+    border: none;
+    padding: 15px 25px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    color: white;
+    margin-bottom: 20px;
   }
   
-  .btn {
-    padding: 6px 8px;
-    font-size: 13px;
+  .btn-success:hover {
+    background-color: rgb(219, 0, 51);
+  }
+  
+  /* Estilos para la tabla */
+  table {
+    width: 90%;
+    max-width: 1200px;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #000000;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .table-dark {
+    background-color: #343a40;
+    color: white;
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  .table-bordered {
+    border: 1px solid #dee2e6;
+  }
+  
+  .table-bordered th,
+  .table-bordered td {
+    border: 1px solid #dee2e6;
   }
   
   th, td {
-    padding: 8px 10px;
+    padding: 12px 15px;
+    text-align: left;
+  }
+  
+  th {
+    font-weight: 600;
+  }
+  
+  tbody tr:hover {
+    background-color: #171717 !important;
+    color: #f0f0f0;
+  }
+  
+  /* Estilos para los botones de acción */
+  .btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
     font-size: 14px;
   }
-}
+  
+  .btn-primary {
+    background-color: #2187f4;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #085db8;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .btn-danger:hover {
+    background-color: #bb2d3b;
+  }
+  
+  .btn-sm {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+  
+  .me-1 {
+    margin-right: 8px;
+  }
+  
+  button[disabled] {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+  
+  /* Estilos para el formulario */
+  form {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    margin-top: 2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    width: 50%;
+    min-width: 350px;
+    max-width: 600px;
+  }
+  
+  form h4 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  label {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #201f1f;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  .form-control:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  }
+  
+  /* Estilos para campos numéricos */
+  input[type="number"] {
+    text-align: right;
+  }
+  
+  /* Estilos para el campo de moneda */
+  td:nth-child(4) {
+    font-weight: bold;
+    color: #28a745;
+  }
+  
+  /* Spinner */
+  .spinner-border {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+    vertical-align: text-bottom;
+    display: inline-block;
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 992px) {
+    .container-fluid {
+      width: 100% !important;
+      padding: 15px;
+    }
+    
+    form {
+      width: 70%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    h2 {
+      font-size: 50px;
+    }
+    
+    table {
+      display: block;
+      overflow-x: auto;
+    }
+    
+    form {
+      width: 85%;
+      padding: 20px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    h2 {
+      font-size: 40px;
+    }
+    
+    form {
+      width: 95%;
+      padding: 15px;
+      min-width: auto;
+    }
+    
+    .form-control {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    
+    .btn-success {
+      padding: 12px 18px;
+      font-size: 15px;
+    }
+    
+    .btn {
+      padding: 6px 8px;
+      font-size: 13px;
+    }
+    
+    th, td {
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+  }
